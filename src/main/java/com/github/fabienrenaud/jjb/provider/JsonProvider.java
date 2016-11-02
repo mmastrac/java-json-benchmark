@@ -4,6 +4,8 @@ import com.dslplatform.json.DslJson;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.grack.nanojson.JsonObject;
+import com.grack.nanojson.JsonParser;
 import com.owlike.genson.Genson;
 import flexjson.JSONDeserializer;
 import flexjson.JSONSerializer;
@@ -37,4 +39,6 @@ public interface JsonProvider<T> {
     Map<String, Object> jsonioStreamOptions();
 
     DslJson<T> dsljson();
+
+    JsonParser.JsonParserContext<JsonObject> nanojson();
 }

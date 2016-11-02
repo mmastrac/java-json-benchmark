@@ -152,4 +152,11 @@ public abstract class JsonBenchmark<T> {
             test(Library.LOGANSQUARE, BENCH.logansquare());
         }
     }
+
+    @Test
+    public void nanojson() throws Exception {
+        for (int i = 0; i < ITERATIONS; i++) {
+            test(Library.NANOJSON, BENCH.nanojson());
+        }
+    }
 }

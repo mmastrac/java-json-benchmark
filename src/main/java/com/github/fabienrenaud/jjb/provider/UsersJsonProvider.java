@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.github.fabienrenaud.jjb.model.Users;
 import com.google.gson.Gson;
+import com.grack.nanojson.JsonObject;
+import com.grack.nanojson.JsonParser;
 import com.owlike.genson.Genson;
 import flexjson.JSONDeserializer;
 import flexjson.JSONSerializer;
@@ -30,6 +32,7 @@ public class UsersJsonProvider implements JsonProvider<Users> {
     private final JSONSerializer flexjsonSer = new JSONSerializer();
     private final org.boon.json.ObjectMapper boon = org.boon.json.JsonFactory.create();
     private final org.apache.johnzon.mapper.Mapper johnson;
+    private final JsonParser.JsonParserContext<JsonObject> nanojson = JsonParser.object();
 
     /*
      * DSL-json
@@ -101,5 +104,10 @@ public class UsersJsonProvider implements JsonProvider<Users> {
     @Override
     public DslJson<Users> dsljson() {
         return dsljson;
+    }
+
+    @Override
+    public JsonParser.JsonParserContext<JsonObject> nanojson() {
+        return nanojson;
     }
 }

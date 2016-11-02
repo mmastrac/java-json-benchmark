@@ -2,6 +2,7 @@ package com.github.fabienrenaud.jjb.stream;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.google.gson.stream.JsonWriter;
+import com.grack.nanojson.JsonAppendableWriter;
 import com.owlike.genson.stream.ObjectWriter;
 
 import java.io.IOException;
@@ -16,4 +17,6 @@ public interface StreamSerializer<T> {
     void gson(final JsonWriter j, final T obj) throws IOException;
 
     void jackson(final JsonGenerator j, final T obj) throws IOException;
+
+    void nanojson(final JsonAppendableWriter j, final T obj) throws IOException;
 }

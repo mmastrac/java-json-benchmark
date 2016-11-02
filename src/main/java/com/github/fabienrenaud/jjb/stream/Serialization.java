@@ -3,6 +3,8 @@ package com.github.fabienrenaud.jjb.stream;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.github.fabienrenaud.jjb.JsonBench;
 import com.github.fabienrenaud.jjb.JsonUtils;
+import com.grack.nanojson.JsonAppendableWriter;
+import com.grack.nanojson.JsonWriter;
 import com.owlike.genson.stream.ObjectWriter;
 import org.openjdk.jmh.annotations.Benchmark;
 
@@ -67,5 +69,15 @@ public class Serialization extends JsonBench {
     @Override
     public Object jsonio() throws Exception {
         return com.cedarsoftware.util.io.JsonWriter.objectToJson(JSON_SOURCE.nextPojo(), JSON_SOURCE.provider().jsonioStreamOptions());
+    }
+
+    @Benchmark
+    @Override
+    public Object nanojson() throws Exception {
+        ByteArrayOutputStream os = JsonUtils.byteArrayOutputStream();
+        JsonAppendableWriter ow = JsonWriter.on(os);
+        JSON_SOURCE.streamSerializer().nanojson(ow, JSON_SOURCE.nextPojo());
+        ow.done();
+        return os;
     }
 }

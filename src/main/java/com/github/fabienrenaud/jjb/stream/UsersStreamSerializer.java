@@ -5,6 +5,7 @@ import com.github.fabienrenaud.jjb.model.Users;
 import com.github.fabienrenaud.jjb.model.Users.User;
 import com.github.fabienrenaud.jjb.model.Users.Friend;
 import com.google.gson.stream.JsonWriter;
+import com.grack.nanojson.JsonAppendableWriter;
 import com.owlike.genson.stream.ObjectWriter;
 
 import java.io.IOException;
@@ -320,5 +321,90 @@ public class UsersStreamSerializer implements StreamSerializer<Users> {
             j.writeString(u.favoriteFruit);
         }
         j.writeEndObject();
+    }
+
+    @Override
+    public void nanojson(JsonAppendableWriter j, Users obj) throws IOException {
+        j.object();
+        if (obj.users != null) {
+            j.array("users");
+            for (User u : obj.users) {
+                nanojson(j, u);
+            }
+            j.end();
+        }
+        j.end();
+    }
+
+    private void nanojson(final JsonAppendableWriter j, final User u) throws IOException {
+        j.object();
+        if (u._id != null) {
+            j.value("_id", u._id);
+        }
+        j.value("index", u.index);
+        if (u.guid != null) {
+            j.value("guid", u.guid);
+        }
+        j.value("isActive", u.isActive);
+        if (u.balance != null) {
+            j.value("balance", u.balance);
+        }
+        if (u.picture != null) {
+            j.value("picture", u.picture);
+        }
+        j.value("age", u.age);
+        if (u.eyeColor != null) {
+            j.value("eyeColor", u.eyeColor);
+        }
+        if (u.name != null) {
+            j.value("name", u.name);
+        }
+        if (u.gender != null) {
+            j.value("gender", u.gender);
+        }
+        if (u.company != null) {
+            j.value("company", u.company);
+        }
+        if (u.email != null) {
+            j.value("email", u.email);
+        }
+        if (u.phone != null) {
+            j.value("phone", u.phone);
+        }
+        if (u.address != null) {
+            j.value("address", u.address);
+        }
+        if (u.about != null) {
+            j.value("about", u.about);
+        }
+        if (u.registered != null) {
+            j.value("registered", u.registered);
+        }
+        j.value("latitude", u.latitude);
+        j.value("longitude", u.longitude);
+        if (u.tags != null) {
+            j.array("tags");
+            for (String t : u.tags) {
+                j.value(t);
+            }
+            j.end();
+        }
+        if (u.friends != null) {
+            j.array("friends");
+            for (Friend f : u.friends) {
+                j.object();
+                j.value("id", f.id);
+                j.value("name", f.name);
+                j.end();
+            }
+            j.end();
+        }
+        if (u.greeting != null) {
+            j.value("greeting", u.greeting);
+        }
+        if (u.favoriteFruit != null) {
+            j.value("favoriteFruit", u.favoriteFruit);
+        }
+        j.end();
     }
 }

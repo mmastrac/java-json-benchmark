@@ -6,6 +6,8 @@ import com.github.fabienrenaud.jjb.model.Users.User;
 import com.github.fabienrenaud.jjb.model.Users.Friend;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
+import com.grack.nanojson.JsonArray;
+import com.grack.nanojson.JsonObject;
 import com.owlike.genson.stream.ObjectReader;
 import com.owlike.genson.stream.ValueType;
 
@@ -455,5 +457,57 @@ public class UsersStreamDeserializer implements StreamDeserializer<Users> {
             }
         }
         return r;
+    }
+
+    @Override
+    public Users nanojson(com.grack.nanojson.JsonObject obj) {
+        Users uc = new Users();
+        uc.users = new ArrayList<>();
+        JsonArray users = obj.getArray("users");
+        for (int i = 0; i < users.size(); i++) {
+            uc.users.add(nanojsonUser(users.getObject(i)));
+        }
+
+        return uc;
+    }
+
+    private User nanojsonUser(com.grack.nanojson.JsonObject obj) {
+        User u = new User();
+        u._id = obj.getString("_id");
+        u.index = obj.getInt("index");
+        u.guid = obj.getString("guid");
+        u.isActive = obj.getBoolean("isActive");
+        u.balance = obj.getString("balance");
+        u.picture = obj.getString("picture");
+        u.age = obj.getInt("age");
+        u.eyeColor = obj.getString("eyeColor");
+        u.name = obj.getString("name");
+        u.gender = obj.getString("gender");
+        u.company = obj.getString("company");
+        u.email = obj.getString("email");
+        u.phone = obj.getString("phone");
+        u.address = obj.getString("address");
+        u.about = obj.getString("about");
+        u.registered = obj.getString("registered");
+        u.latitude = obj.getDouble("latitude");
+        u.longitude = obj.getDouble("longitude");
+        JsonArray tags = obj.getArray("tags");
+        u.tags = new ArrayList<>(tags.size());
+        for (int i = 0; i < tags.size(); i++) {
+            u.tags.add(tags.getString(i));
+        }
+        JsonArray friends = obj.getArray("friends");
+        u.friends = new ArrayList<>(friends.size());
+        for (int i = 0; i < friends.size(); i++) {
+            JsonObject jFriend = friends.getObject(i);
+            Friend friend = new Friend();
+            friend.id = jFriend.getString("id");
+            friend.name = jFriend.getString("id");
+            u.friends.add(friend);
+        }
+        u.greeting = obj.getString("greeting");
+        u.favoriteFruit = obj.getString("favoriteFruit");
+
+        return u;
     }
 }

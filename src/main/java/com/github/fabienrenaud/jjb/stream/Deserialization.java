@@ -3,6 +3,7 @@ package com.github.fabienrenaud.jjb.stream;
 import com.fasterxml.jackson.core.JsonParser;
 import com.github.fabienrenaud.jjb.JsonBench;
 import com.grack.nanojson.JsonObject;
+import com.grack.nanojson.JsonReader;
 import com.owlike.genson.stream.ObjectReader;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,6 +62,6 @@ public class Deserialization extends JsonBench {
     @Benchmark
     @Override
     public Object nanojson() throws Exception {
-        return JSON_SOURCE.streamDeserializer().nanojson((JsonObject) JSON_SOURCE.provider().nanojson().from(JSON_SOURCE.nextInputStream()));
+        return JSON_SOURCE.streamDeserializer().nanojson(JsonReader.from(JSON_SOURCE.nextInputStream()));
     }
 }

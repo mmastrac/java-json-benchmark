@@ -8,6 +8,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.grack.nanojson.JsonArray;
 import com.grack.nanojson.JsonObject;
+import com.grack.nanojson.JsonParserException;
 import com.owlike.genson.stream.ObjectReader;
 import com.owlike.genson.stream.ValueType;
 
@@ -460,53 +461,124 @@ public class UsersStreamDeserializer implements StreamDeserializer<Users> {
     }
 
     @Override
-    public Users nanojson(com.grack.nanojson.JsonObject obj) {
+    public Users nanojson(com.grack.nanojson.JsonReader reader) throws JsonParserException {
         Users uc = new Users();
         uc.users = new ArrayList<>();
-        JsonArray users = obj.getArray("users");
-        for (int i = 0; i < users.size(); i++) {
-            uc.users.add(nanojsonUser(users.getObject(i)));
+        reader.object();
+        while (!reader.done()) {
+            if (reader.key().equals("users")) {
+                reader.array();
+                while (!reader.done()) {
+                    uc.users.add(nanojsonUser(reader));
+                }
+                reader.pop();
+            }
         }
+        reader.pop();
 
         return uc;
     }
 
-    private User nanojsonUser(com.grack.nanojson.JsonObject obj) {
+    private User nanojsonUser(com.grack.nanojson.JsonReader reader) throws JsonParserException {
         User u = new User();
-        u._id = obj.getString("_id");
-        u.index = obj.getInt("index");
-        u.guid = obj.getString("guid");
-        u.isActive = obj.getBoolean("isActive");
-        u.balance = obj.getString("balance");
-        u.picture = obj.getString("picture");
-        u.age = obj.getInt("age");
-        u.eyeColor = obj.getString("eyeColor");
-        u.name = obj.getString("name");
-        u.gender = obj.getString("gender");
-        u.company = obj.getString("company");
-        u.email = obj.getString("email");
-        u.phone = obj.getString("phone");
-        u.address = obj.getString("address");
-        u.about = obj.getString("about");
-        u.registered = obj.getString("registered");
-        u.latitude = obj.getDouble("latitude");
-        u.longitude = obj.getDouble("longitude");
-        JsonArray tags = obj.getArray("tags");
-        u.tags = new ArrayList<>(tags.size());
-        for (int i = 0; i < tags.size(); i++) {
-            u.tags.add(tags.getString(i));
+
+        reader.object();
+
+        while (!reader.done()) {
+            switch (reader.key()) {
+                case "_id":
+                    u._id = reader.string();
+                    break;
+                case "index":
+                    u.index = reader.intVal();
+                    break;
+                case "guid":
+                    u.guid = reader.string();
+                    break;
+                case "isActive":
+                    u.isActive = reader.bool();
+                    break;
+                case "balance":
+                    u.balance = reader.string();
+                    break;
+                case "picture":
+                    u.picture = reader.string();
+                    break;
+                case "age":
+                    u.age = reader.intVal();
+                    break;
+                case "eyeColor":
+                    u.eyeColor = reader.string();
+                    break;
+                case "name":
+                    u.name = reader.string();
+                    break;
+                case "gender":
+                    u.gender = reader.string();
+                    break;
+                case "company":
+                    u.company = reader.string();
+                    break;
+                case "email":
+                    u.email = reader.string();
+                    break;
+                case "phone":
+                    u.phone = reader.string();
+                    break;
+                case "address":
+                    u.address = reader.string();
+                    break;
+                case "about":
+                    u.about = reader.string();
+                    break;
+                case "registered":
+                    u.registered = reader.string();
+                    break;
+                case "latitude":
+                    u.latitude = reader.doubleVal();
+                    break;
+                case "longitude":
+                    u.longitude = reader.doubleVal();
+                    break;
+                case "tags":
+                    u.tags = new ArrayList<String>();
+                    reader.array();
+                    while (!reader.done()) {
+                        u.tags.add(reader.string());
+                    }
+                    reader.pop();
+                    break;
+                case "friends":
+                    u.friends = new ArrayList<Friend>();
+                    reader.array();
+                    while (!reader.done()) {
+                        reader.object();
+                        Friend f = new Friend();
+                        u.friends.add(f);
+                        while (!reader.done()) {
+                            switch (reader.key()) {
+                                case "id":
+                                    f.id = reader.string();
+                                    break;
+                                case "name":
+                                    f.name = reader.string();
+                                    break;
+                            }
+                        }
+                        reader.pop();
+                    }
+                    reader.pop();
+                    break;
+                case "greeting":
+                    u.greeting = reader.string();
+                    break;
+                case "favoriteFruit":
+                    u.favoriteFruit = reader.string();
+                    break;
+            }
         }
-        JsonArray friends = obj.getArray("friends");
-        u.friends = new ArrayList<>(friends.size());
-        for (int i = 0; i < friends.size(); i++) {
-            JsonObject jFriend = friends.getObject(i);
-            Friend friend = new Friend();
-            friend.id = jFriend.getString("id");
-            friend.name = jFriend.getString("id");
-            u.friends.add(friend);
-        }
-        u.greeting = obj.getString("greeting");
-        u.favoriteFruit = obj.getString("favoriteFruit");
+
+        reader.pop();
 
         return u;
     }

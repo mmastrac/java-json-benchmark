@@ -3,6 +3,7 @@ package com.github.fabienrenaud.jjb.stream;
 import com.fasterxml.jackson.core.JsonParser;
 import com.google.gson.stream.JsonReader;
 import com.grack.nanojson.JsonObject;
+import com.grack.nanojson.JsonParserException;
 import com.owlike.genson.stream.ObjectReader;
 
 import java.io.IOException;
@@ -18,5 +19,5 @@ public interface StreamDeserializer<T> {
 
     T jackson(JsonParser jParser) throws IOException;
 
-    T nanojson(JsonObject jsonParser) throws IOException;
+    T nanojson(com.grack.nanojson.JsonReader reader) throws JsonParserException;
 }
